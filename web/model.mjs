@@ -1,7 +1,6 @@
-// Keep transformations separate from the DOM so they can be tested directly.
-export function cleanLines(text) {
-  if (typeof text !== 'string') throw new TypeError('Expected text');
-  const lines = text.split(/\r\n|\r|\n/).map(line => line.trim()).filter(Boolean);
-  const unique = [...new Set(lines)];
-  return { text: unique.join('\n'), count: unique.length, removed: lines.length - unique.length };
-}
+export const YEARS=['1947','1977','streets'];
+export const EXTENT=[[-63.7422255,44.5553848],[-63.3866545,44.7305971]];
+export const PLACES={waterfront:{name:'Halifax waterfront',center:[44.6486,-63.5719],zoom:15,note:'Follow the edges of the harbour, piers and waterfront streets across both aerial surveys.'},north:{name:'North End',center:[44.6691,-63.6002],zoom:15,note:'Compare the street grid, railway lands and industrial waterfront. Use the modern street map to orient yourself.'},dartmouth:{name:'Downtown Dartmouth',center:[44.6654,-63.5687],zoom:15,note:'Explore the Dartmouth waterfront and surrounding blocks on the opposite side of the harbour.'},arm:{name:'Northwest Arm',center:[44.631,-63.605],zoom:14,note:'Trace the shoreline, green spaces and neighbourhood streets around the Northwest Arm.'},basin:{name:'Bedford Basin',center:[44.699,-63.638],zoom:13,note:'Compare the basin shoreline. Historical coverage is limited to the published mosaic footprint.'}};
+export function readView(hash){const p=new URLSearchParams(hash.replace(/^#/,''));const n=(k,f,min,max)=>{const v=p.has(k)?Number(p.get(k)):NaN;return Number.isFinite(v)&&v>=min&&v<=max?v:f;};return {lat:n('lat',44.6486,44.55,44.74),lng:n('lng',-63.5719,-63.75,-63.38),zoom:n('z',14,11,18),split:n('split',50,0,100),left:YEARS.includes(p.get('left'))?p.get('left'):'1947',right:YEARS.includes(p.get('right'))?p.get('right'):'1977'};}
+export function label(year){return year==='streets'?'Modern street map':`${year} aerial photograph`;}
+export function wmsOptions(year){if(!['1947','1977'].includes(year))throw Error('Unsupported aerial year');return {layers:'halifax',format:'image/png',transparent:true,version:'1.3.0',time:`${year}-07-01T12:00:00Z`,maxZoom:18,tileSize:256};}

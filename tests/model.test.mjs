@@ -1,21 +1,4 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { cleanLines } from '../web/model.mjs';
-test('trims, removes blanks and preserves first-seen order', () => {
-  assert.deepEqual(cleanLines('  Halifax\nLangley\nHalifax\n\nVancouver  '), {
-    text: 'Halifax\nLangley\nVancouver', count: 3, removed: 1,
-  });
-});
-test('supports Windows and old Mac line endings', () => {
-  assert.equal(cleanLines('a\r\nb\ra').text, 'a\nb');
-});
-test('empty text and whitespace produce an empty result', () => {
-  assert.deepEqual(cleanLines(' \n\t'), { text: '', count: 0, removed: 0 });
-});
-test('preserves case and Unicode', () => {
-  assert.equal(cleanLines('Québec\nquébec\n東京\nQuébec').text, 'Québec\nquébec\n東京');
-});
-test('treats markup as ordinary text', () => {
-  assert.equal(cleanLines('<script>alert(1)</script>\n<script>alert(1)</script>').text, '<script>alert(1)</script>');
-});
-test('rejects non-text input', () => { assert.throws(() => cleanLines(null), TypeError); });
+import test from 'node:test';import assert from 'node:assert/strict';import {readView,wmsOptions,label} from '../web/model.mjs';
+test('shared views round trip valid years, coordinates and reveal position',()=>{const v=readView('#lat=44.66&lng=-63.58&z=16&split=75&left=1977&right=streets');assert.equal(v.lat,44.66);assert.equal(v.left,'1977');assert.equal(v.right,'streets');assert.equal(v.split,75);});
+test('invalid shared parameters cannot select arbitrary layers or leave the footprint',()=>{const v=readView('#lat=90&lng=NaN&z=99&split=-2&left=evil');assert.equal(v.lat,44.6486);assert.equal(v.zoom,14);assert.equal(v.split,50);assert.equal(v.left,'1947');});
+test('WMS time uses the exact supported source dimensions',()=>{assert.equal(wmsOptions('1947').time,'1947-07-01T12:00:00Z');assert.equal(wmsOptions('1977').layers,'halifax');assert.throws(()=>wmsOptions('2026'));assert.equal(label('streets'),'Modern street map');});

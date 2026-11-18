@@ -1,12 +1,17 @@
 {
-  "id": "coolcode-tool-template",
-  "title": "CoolCode Tool Starter",
-  "description": "A browser-only example that trims lines and removes exact duplicates.",
-  "category": "security",
-  "tags": ["text", "lines", "duplicates"],
-  "icon": "scan-search",
-  "url": "/coolcode-tool-template/",
-  "source": "https://github.com/jsdyer/coolcode-tool-template",
+  "id": "halifaxtimelens",
+  "title": "Halifax Time Lens",
+  "description": "Compare Halifax aerial photographs from 1947 and 1977 with a modern street map.",
+  "category": "places",
+  "tags": [
+    "canada",
+    "local",
+    "public data",
+    "halifax"
+  ],
+  "icon": "map",
+  "url": "/halifaxtimelens/",
+  "source": "https://github.com/jsdyer/halifaxtimelens",
   "hosting": "project",
   "access": "browser"
 }

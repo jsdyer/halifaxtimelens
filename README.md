@@ -1,102 +1,53 @@
-# CoolCode browser tool template
+# Halifax Time Lens
 
-A starting point for independent tools at `coolcode.ca/<repo>/`: a working local-text
-example, responsive UI, Python standard-library build, Node tests, PR checks and Pages
-publication. No npm install is needed.
+Compare Halifax and Dartmouth aerial photographs from 1947 and 1977.
 
-## One-time template setup
+**[Open the live browser tool](https://coolcode.ca/halifaxtimelens/)** · [CoolCode catalogue](https://coolcode.ca/)
 
-Enable **Settings → General → Template repository** here. This repository does not
-need Pages enabled: its workflow builds/tests but intentionally skips deployment.
-New copies also skip deployment until `scripts/init.py` sets the tool ID to match
-their repository name. This lets you create the repo before configuring Pages.
+No installation or account is needed to use the tool. This repository contains its independent source, tests and GitHub Pages publishing workflow.
 
-## Start a new tool
+## What you can do
 
-1. Select **Use this template → Create a new repository**, choose owner `jsdyer`,
-   a unique lowercase name such as `my-tool`, and public visibility.
-2. Clone the new repository. Use Python 3.12+ and Node 24+.
-3. Set the identity, using a slug that matches the repository name:
+- Drag the reveal slider, pan and zoom synchronized maps, and swap the two sides.
+- Jump to the waterfront, North End, Dartmouth, Northwest Arm or Bedford Basin.
+- Add a modern **street map** for orientation and share the exact comparison view.
 
-```sh
-python3 scripts/init.py my-tool --title "My Tool" --description "Describe what this tool does."
-```
+## Imagery and coverage
 
-Review the category, tags and icon in `tool.json`. `access: "browser"` tells the main
-catalogue that the tool works immediately without installation. `--owner` supports a different
-GitHub owner, but only projects owned by `jsdyer` inherit the CoolCode domain.
+[NRCan’s Halifax aerial-photograph mosaic](https://open.canada.ca/data/en/dataset/4e8e3c6a-c961-4def-bdc7-f24823462818) provides georeferenced historical imagery under the Open Government Licence – Canada. Original mosaic resolution is 1 m for 1947 and 0.5 m for 1977. Coverage is the published Halifax-area footprint, not all of HRM or Nova Scotia.
 
-4. Replace the example in `web/` and its tests. Update the privacy explanation,
-   source attribution and README to describe the real tool.
-5. Test and preview:
+- Capabilities: `https://datacube.services.geo.ca/web/napl-halifax.xml`
+- Map tiles: `https://datacube.services.geo.ca/ows/aerial`
+- Layer: `halifax`; WMS 1.3.0; time: `1947-07-01T12:00:00Z` or `1977-07-01T12:00:00Z`.
+
+The capabilities URL describes the service; it does not render images. The app uses the advertised GetMap endpoint. Historical images may have alignment differences and seams. A comparison is not a precise boundary or change measurement. Modern OpenStreetMap data is a street map, **not current aerial photography**. If imagery fails, the app displays a notice and links to the official source.
+
+OpenStreetMap contributors supply the street map. Leaflet's licence is included in `web/vendor/LICENSE`.
+
+## Development
 
 ```sh
 node --test tests/*.test.mjs
 python3 -m unittest discover -s tests -v
 python3 scripts/build.py
-python3 -m http.server 8000 --directory dist
 ```
 
-Open `http://localhost:8000/`. The example trims lines, skips blanks and removes exact
-duplicates, preserving first-seen order and capitalization. It makes no API requests
-and does not persist text. Update that explanation if your app behaves differently.
+The build writes `dist/` and works at the project subpath `/halifaxtimelens/`. Do not commit `dist/` or add a `CNAME`; the account’s main Pages site supplies the coolcode.ca domain. Node is used for tests, not a frontend dependency bundle.
 
-CI also tests the browser flow and mobile layout at a project subpath. Replace the
-sample assertions in `tests/browser_smoke.py` when implementing your own UI. To run
-that check locally (optional for ordinary preview):
+`web/` contains the application; `scripts/` contains the offline builder; `tests/` contains model/source/build checks and Chromium user-flow tests. Browser checks cover project paths, controls, sharing, exports or layer selection, error handling, and mobile overflow. GitHub Actions installs their test-only dependencies from `tests/browser-requirements.txt`.
 
-```sh
-python3 -m venv .venv
-. .venv/bin/activate
-python3 -m pip install -r tests/browser-requirements.txt
-python3 -m playwright install --with-deps chromium
-python3 tests/browser_smoke.py
-```
+## Publishing and maintenance
 
-Playwright is a test-only dependency; the app and its static build do not use it.
+`.github/workflows/pages.yml` checks pull requests and main commits. Only a successful main build deploys. Repository Settings → Pages must use **GitHub Actions**. The browser-checks artifact contains desktop/mobile screenshots. A failed build leaves the previous deployment in place.
 
-## Publish and register
+`.github/dependabot.yml` enables **GitHub Dependabot**, which proposes updates to workflow actions and configured dependencies as pull requests. A proposal does not update main until merged. Review the diff and checks for the current PR commit before merging. Netlify is not used by this project.
 
-When the actual tool is ready, in the **new tool repository** set **Settings → Pages → Build and deployment →
-Source → GitHub Actions**. Push to `main`, or manually run **Browser tool · Check and
-publish** after enabling Pages. If the initial deployment ran before Pages was enabled,
-enable it and rerun. PRs only check/build and provide a downloadable preview artifact.
+`tool.json` describes this tool in the CoolCode catalogue. Its reviewed record belongs in `jsdyer/jsdyer.github.io/data/tools.json`; run that repository’s `scripts/sync_readme.py` to keep the hub README and polished homepage aligned. Changing this repository alone does not change the homepage listing.
 
-Keep asset paths and module imports relative. Check `https://coolcode.ca/my-tool/`.
-Do not add a CNAME or set `coolcode.ca` as this project's custom domain; the account
-site supplies it. Only successful `main` builds deploy.
+## Source availability
 
-After verifying the app, copy the reviewed object from `tool.json` into `data/tools.json`
-in [the main site](https://github.com/jsdyer/jsdyer.github.io). Each tool still builds
-independently. Update the hub record when listing metadata changes; the hub is the
-authority for discovery. Ordinary app updates touch only this repository.
+The static build is offline; historical imagery loads from NRCan when a visitor explores. No scheduled data commit is needed for these fixed survey years. CI substitutes external tiles to test the UI deterministically. Real NRCan imagery was checked separately in the browser; CI cannot guarantee continuing upstream availability.
 
-The main site separates **Use in your browser** from **Install yourself**. An app
-that asks for a file is still a browser tool. Standalone Linux packages should start
-in their own repositories with their own build/release workflow, rather than copying
-this browser-only scaffold. Their hub record uses `access: "install"`, links to an
-installation guide, and includes `requirements`.
+## Privacy
 
-## Files
-
-| Path | Purpose |
-| --- | --- |
-| `tool.json` | Page metadata and a ready-to-copy catalogue record |
-| `web/` | HTML, responsive CSS, DOM interactions and separate model logic |
-| `scripts/build.py` | Escape metadata and build `web/` into `dist/` |
-| `scripts/init.py` | Set a new project's identity |
-| `tests/` | Application and builder tests |
-| `.github/workflows/pages.yml` | Check PRs and publish successful main builds |
-| `AGENTS.md` | Instructions for future coding work |
-
-Namespace optional storage as `coolcode:<tool-id>:<key>`; CoolCode paths share a
-browser origin. Don't save pasted text/uploads by default. Document external APIs
-and send only the information needed for the selected action. Never embed secrets.
-
-Scheduled refresh is opt-in. Validate source data before deploying, display its date,
-and preserve the last good deployment on failure. Public-repository schedules can
-stop after 60 days without repository activity.
-
-Templates don't propagate future edits automatically. Adopt fixes explicitly and
-consider a versioned reusable workflow once several tools confirm the shared process.
-Choose and add the intended software license before distributing a new project.
+The app does not retain searches or location history. NRCan receives image requests for the map area; OpenStreetMap receives street-map tile requests. There are no accounts or analytics. Sharing places the selected record or comparison view in the URL; it does not upload private files. External source links open the original provider.
