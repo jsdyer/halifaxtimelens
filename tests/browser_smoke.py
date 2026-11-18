@@ -2,7 +2,7 @@
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-import json, shutil, tempfile, threading
+import json, re, shutil, tempfile, threading
 from urllib.parse import parse_qs, urlsplit
 from playwright.sync_api import sync_playwright, expect
 ROOT=Path(__file__).resolve().parents[1]
@@ -39,6 +39,11 @@ def main():
                     expect(page.locator('#right-label')).to_have_text('Modern street map')
                     page.locator('[data-place="dartmouth"]').click()
                     expect(page.locator('#place-title')).to_have_text('Downtown Dartmouth')
+                    archive = page.get_by_role('link', name='Find archival aerial photos around this map location')
+                    expect(archive).to_have_attribute('href', re.compile(r'center=-63\.568[0-9]*%2C44\.665[0-9]*'))
+                    params = parse_qs(urlsplit(archive.get_attribute('href')).query)
+                    assert params['webmap'] == ['a4b041e843d2463b99e8680057076725']
+                    assert params['level'] == ['15']
                     page.locator('#share').click(); url=page.locator('#share-url').input_value()
                     assert 'right=streets' in url and 'split=70' in url
                     page.goto(url); expect(page.locator('#right-year')).to_have_value('streets')

@@ -11,6 +11,7 @@ No installation or account is needed to use the tool. This repository contains i
 - Drag the reveal slider, pan and zoom synchronized maps, and swap the two sides.
 - Jump to the waterfront, North End, Dartmouth, Northwest Arm or Bedford Basin.
 - Add a modern **street map** for orientation and share the exact comparison view.
+- Open the [Halifax Municipal Archives photo index](https://www.halifax.ca/about-halifax/municipal-archives/exhibits/historical-aerial-photos) at the current map location to explore photographs from 1955–2001. Select a point in the index for archival details, or browse the [Flying to the Past album](https://archives.novascotia.ca/communityalbums/halifaxarchives/).
 
 ## Imagery and coverage
 
