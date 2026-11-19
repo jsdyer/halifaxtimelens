@@ -1,6 +1,10 @@
 # Halifax Time Lens
 
-Compare Halifax and Dartmouth aerial photographs from 1947 and 1977.
+Compare Halifax and Dartmouth aerial photographs from 1947 and 1977, then find nearby photographs from the Halifax Municipal Archives index.
+
+<!-- coolcode:guide -->
+Choose Halifax Ferry Terminal in Photographs near this point, select a one-kilometre radius, and compare the indexed photo years. Pan or click the map to search a different location. Open any linked archival reference to see the original catalogue entry.
+<!-- /coolcode:guide -->
 
 **[Open the live browser tool](https://coolcode.ca/halifaxtimelens/)** · [CoolCode catalogue](https://coolcode.ca/)
 
@@ -47,7 +51,7 @@ The build writes `dist/` and works at the project subpath `/halifaxtimelens/`. D
 
 ## Source availability
 
-The static build is offline; historical imagery loads from NRCan when a visitor explores. No scheduled data commit is needed for these fixed survey years. CI substitutes external tiles to test the UI deterministically. Real NRCan imagery was checked separately in the browser; CI cannot guarantee continuing upstream availability.
+The static build is offline; historical imagery loads from NRCan when a visitor explores. A weekly Action refreshes the [municipal photo index](https://services2.arcgis.com/11XBiaBYA9Ep0yNJ/arcgis/rest/services/Historical_Aerial_Photographs_Index/FeatureServer/0). The bundled file records its retrieval date separately from the mosaic dates. All index locations are included, including entries without a catalogue link. Distance is measured to the indexed point, which may be an oblique view and does not describe a photo footprint. Photo reproductions remain at the archives. CI substitutes external tiles to test the UI deterministically. Real NRCan imagery was checked separately in the browser; CI cannot guarantee continuing upstream availability.
 
 ## Privacy
 

@@ -1,7 +1,7 @@
 {
   "id": "halifaxtimelens",
   "title": "Halifax Time Lens",
-  "description": "Compare Halifax aerial photographs from 1947 and 1977 with a modern street map.",
+  "description": "Compare Halifax aerial mosaics and find nearby archival photographs from 1955 and 2001.",
   "category": "places",
   "tags": [
     "canada",
@@ -13,5 +13,25 @@
   "url": "/halifaxtimelens/",
   "source": "https://github.com/jsdyer/halifaxtimelens",
   "hosting": "project",
-  "access": "browser"
+  "access": "browser",
+  "data_info": {
+    "mode": "mixed",
+    "detail": "NRCan aerial mosaics and a modern street map stream on demand. Nearby photographs come from a refreshed Halifax Municipal Archives index.",
+    "cadence": "Weekly",
+    "probes": [
+      {
+        "label": "Photo index retrieved",
+        "url": "https://coolcode.ca/halifaxtimelens/data/photos.json",
+        "path": [
+          "retrieved"
+        ],
+        "count_at": {
+          "path": [
+            "count"
+          ],
+          "unit": "photographs"
+        }
+      }
+    ]
+  }
 }

@@ -2,7 +2,7 @@
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-import json, re, shutil, tempfile, threading
+import os, json, re, shutil, tempfile, threading
 from urllib.parse import parse_qs, urlsplit
 from playwright.sync_api import sync_playwright, expect
 ROOT=Path(__file__).resolve().parents[1]
@@ -18,7 +18,7 @@ def main():
         threading.Thread(target=server.serve_forever,daemon=True).start()
         try:
             with sync_playwright() as p:
-                browser=p.chromium.launch(); page=browser.new_page(viewport={'width':1440,'height':1050})
+                browser=p.chromium.launch(executable_path=os.getenv("CHROME_BIN")); page=browser.new_page(viewport={'width':1440,'height':1050})
                 errors=[]; page.on('pageerror',lambda e:errors.append(str(e)))
                 svg='<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" fill="#dce4d5"/></svg>'
                 page.route('https://tile.openstreetmap.org/**',lambda r:r.fulfill(content_type='image/svg+xml',body=svg))
@@ -33,6 +33,10 @@ def main():
                 if slug=='halifaxtimelens':
                     expect(page.locator('#status')).to_contain_text('Comparison ready')
                     assert {q['time'][0][:4] for q in wms}=={'1947','1977'}
+                    page.locator('#photo-ferry').click()
+                    expect(page.locator('#photo-count')).to_contain_text('16 indexed photographs')
+                    page.locator('#photo-year').select_option('1955')
+                    expect(page.locator('#photo-list li')).to_have_count(2)
                     page.locator('#reveal').fill('70')
                     assert '70%' in page.locator('#right-map').get_attribute('style')
                     page.locator('#right-year').select_option('streets')

@@ -22,3 +22,31 @@ map.on('move zoom resize',()=>right.setView(map.getCenter(),map.getZoom(),{anima
 $('left-year').value=view.left;$('right-year').value=view.right;$('reveal').value=view.split;for(const id of ['left-year','right-year'])$(id).onchange=updateLayers;$('reveal').oninput=reveal;$('swap').onclick=()=>{const a=$('left-year').value;$('left-year').value=$('right-year').value;$('right-year').value=a;updateLayers();};
 function place(key){const p=PLACES[key];map.setView(p.center,p.zoom);$('place-title').textContent=p.name;$('place-note').textContent=p.note;for(const b of document.querySelectorAll('[data-place]'))b.setAttribute('aria-pressed',String(b.dataset.place===key));}
 for(const [key,p] of Object.entries(PLACES)){const b=el('button',p.name+' ↗');b.dataset.place=key;b.setAttribute('aria-pressed',String(key==='waterfront'));b.onclick=()=>place(key);$('places').append(b);}$('reset').onclick=()=>place('waterfront');$('share').onclick=()=>{const c=map.getCenter();share({lat:c.lat.toFixed(5),lng:c.lng.toFixed(5),z:map.getZoom(),left:$('left-year').value,right:$('right-year').value,split:$('reveal').value});};updateLayers();reveal();
+
+import {nearPhotos} from './model.mjs';
+let photoIndex,photoLimit=8;
+function renderPhotos(){
+  if(!photoIndex)return;
+  const centre=map.getCenter(),radius=Number($('photo-radius').value);
+  const found=nearPhotos(photoIndex.photos,centre.lat,centre.lng,radius,$('photo-year').value);
+  $('photo-count').textContent=found.length+' indexed photographs within '+radius+' km of the map centre ('+centre.lat.toFixed(4)+', '+centre.lng.toFixed(4)+').';
+  $('photo-list').replaceChildren(...found.slice(0,photoLimit).map(({photo:p,distance})=>{
+    const item=el('li'),reference=p[1]+' · '+p[0];
+    if(p[5]){const link=el('a',reference);link.href=p[5];item.append(link)}else{item.append(el('span',reference+' · catalogue link unavailable'))}
+    item.append(el('small',p[2]+' · '+Math.round(distance*1000).toLocaleString('en-CA')+' m'));return item;
+  }));
+  $('photo-more').hidden=found.length<=photoLimit;
+}
+function resetPhotos(){photoLimit=8;renderPhotos()}
+map.on('moveend',resetPhotos);
+map.on('click',event=>map.panTo(event.latlng));
+$('photo-ferry').onclick=()=>map.setView([44.6497,-63.5714],16);
+$('photo-more').onclick=()=>{photoLimit+=20;renderPhotos()};
+$('photo-radius').onchange=resetPhotos;$('photo-year').onchange=resetPhotos;
+try{
+  const res=await fetch('./data/photos.json');if(!res.ok)throw Error();photoIndex=await res.json();
+  const years=[...new Set(photoIndex.photos.map(p=>p[2]))].sort();
+  for(const y of years)$('photo-year').append(new Option(String(y),String(y)));
+  $('photo-meta').textContent=photoIndex.count+' index records · '+years.join(' and ')+' · Retrieved '+photoIndex.retrieved+' UTC';
+  renderPhotos();
+}catch{$('photo-meta').textContent='The bundled photo index could not load. Use the municipal archive map above.'}

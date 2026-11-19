@@ -4,3 +4,11 @@ export const PLACES={waterfront:{name:'Halifax waterfront',center:[44.6486,-63.5
 export function readView(hash){const p=new URLSearchParams(hash.replace(/^#/,''));const n=(k,f,min,max)=>{const v=p.has(k)?Number(p.get(k)):NaN;return Number.isFinite(v)&&v>=min&&v<=max?v:f;};return {lat:n('lat',44.6486,44.55,44.74),lng:n('lng',-63.5719,-63.75,-63.38),zoom:n('z',14,11,18),split:n('split',50,0,100),left:YEARS.includes(p.get('left'))?p.get('left'):'1947',right:YEARS.includes(p.get('right'))?p.get('right'):'1977'};}
 export function label(year){return year==='streets'?'Modern street map':`${year} aerial photograph`;}
 export function wmsOptions(year){if(!['1947','1977'].includes(year))throw Error('Unsupported aerial year');return {layers:'halifax',format:'image/png',transparent:true,version:'1.3.0',time:`${year}-07-01T12:00:00Z`,maxZoom:18,tileSize:256};}
+
+export function nearPhotos(photos,lat,lon,radius,year='') {
+  const rad=Math.PI/180;
+  return photos.filter(r=>!year||String(r[2])===String(year)).map(photo=>{
+    const a=Math.sin((photo[3]-lat)*rad/2)**2+Math.cos(lat*rad)*Math.cos(photo[3]*rad)*Math.sin((photo[4]-lon)*rad/2)**2;
+    return {photo,distance:6371*2*Math.asin(Math.min(1,Math.sqrt(a)))};
+  }).filter(item=>item.distance<=radius).sort((a,b)=>a.distance-b.distance||a.photo[0].localeCompare(b.photo[0]));
+}
