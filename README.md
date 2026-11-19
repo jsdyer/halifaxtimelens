@@ -68,4 +68,4 @@ The static build is offline; historical imagery loads from NRCan when a visitor 
 
 ## Privacy
 
-The app stores only the photo IDs you choose to save to the notebook. Remove a reference to delete it from the notebook. When local storage is unavailable, saved references last for the current page session. NRCan receives image requests for the map area; OpenStreetMap receives street-map tile requests. There are no accounts or analytics. Sharing places the comparison view, guide and photo filters in the URL; it does not upload private files. External source links open the original provider.
+The app stores only the photo IDs you choose to save to the notebook. Remove a reference to delete it from the notebook. When local storage is unavailable, saved references last for the current page session. NRCan receives image requests for the map area; OpenStreetMap receives street-map tile requests. CoolCode counts page opens by tool ID. Map views, filters and saved photos stay out of that count. Sharing places the comparison view, guide and photo filters in the URL; it does not upload private files. External source links open the original provider.
