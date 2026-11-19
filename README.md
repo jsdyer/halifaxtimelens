@@ -3,7 +3,7 @@
 Compare Halifax and Dartmouth aerial photographs from 1947 and 1977, then find nearby photographs from the Halifax Municipal Archives index.
 
 <!-- coolcode:guide -->
-Choose Halifax Ferry Terminal in Photographs near this point, select a one-kilometre radius, and compare the indexed photo years. Pan or click the map to search a different location. Open any linked archival reference to see the original catalogue entry.
+Start with Cogswell and Scotia Square to compare the blocks before clearance with the 1977 mosaic, then open the 1961 photograph and the later demolition view. At the ferry terminal, see the closest 1955 and 2001 archive references within one kilometre, show the indexed points on both maps, and save references to a downloadable GeoJSON notebook.
 <!-- /coolcode:guide -->
 
 **[Open the live browser tool](https://coolcode.ca/halifaxtimelens/)** · [CoolCode catalogue](https://coolcode.ca/)
@@ -16,6 +16,19 @@ No installation or account is needed to use the tool. This repository contains i
 - Jump to the waterfront, North End, Dartmouth, Northwest Arm or Bedford Basin.
 - Add a modern **street map** for orientation and share the exact comparison view.
 - Open the [Halifax Municipal Archives photo index](https://www.halifax.ca/about-halifax/municipal-archives/exhibits/historical-aerial-photos) at the current map location to explore photographs from 1955–2001. Select a point in the index for archival details, or browse the [Flying to the Past album](https://archives.novascotia.ca/communityalbums/halifaxarchives/).
+
+## Photographic guides and research notebook
+
+Four guides centre the mosaics on the subject of a pair of historical photographs. Each links to the individual archive records, with their reference codes and published dates. The dates of the photographs can be approximate. The suggested map centres locate the neighbourhood, while the original oblique photographs each show a different angle.
+
+| Guide | Earlier source | Later source |
+| --- | --- | --- |
+| [Cogswell and Scotia Square](https://coolcode.ca/halifaxtimelens/#story=cogswell) | [Downtown Halifax, 4 June 1961](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=437) | [Demolition for Scotia Square, circa 1962–1965](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=439) |
+| [Dartmouth ferry landing](https://coolcode.ca/halifaxtimelens/#story=dartmouth) | [Portland Street, 1950s](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=465) | [Queen Street and City Hall, 1960s](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=467) |
+| [Point Pleasant and the container terminal](https://coolcode.ca/halifaxtimelens/#story=terminal) | [Rail yards and piers, 1960s to 1967](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=440) | [Park and terminal, 1980s](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=445) |
+| [Shannon Park and the MacKay Bridge](https://coolcode.ca/halifaxtimelens/#story=narrows) | [Bedford Institute, 9 September 1965](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=441) | [Shannon Park and bridge, 1970s](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=475) |
+
+The year cards summarise the complete municipal index within the chosen radius and identify the closest record in each year. The year selector filters the list and optional map dots. Proximity measures the distance between indexed locations and the map centre. The photo may face a different direction or cover different ground. Each saved location exports with its municipal ID, archival reference, year, coordinates and catalogue URL when supplied. The GeoJSON also records the index source and retrieval date.
 
 ## Imagery and coverage
 
@@ -55,4 +68,4 @@ The static build is offline; historical imagery loads from NRCan when a visitor 
 
 ## Privacy
 
-The app does not retain searches or location history. NRCan receives image requests for the map area; OpenStreetMap receives street-map tile requests. There are no accounts or analytics. Sharing places the selected record or comparison view in the URL; it does not upload private files. External source links open the original provider.
+The app stores only the photo IDs you choose to save to the notebook. Remove a reference to delete it from the notebook. When local storage is unavailable, saved references last for the current page session. NRCan receives image requests for the map area; OpenStreetMap receives street-map tile requests. There are no accounts or analytics. Sharing places the comparison view, guide and photo filters in the URL; it does not upload private files. External source links open the original provider.

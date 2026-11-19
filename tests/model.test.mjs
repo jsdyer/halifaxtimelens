@@ -9,3 +9,27 @@ test('a nearby point can have no catalogue URL and year/radius constrain the sel
  assert.deepEqual(nearPhotos(photos,44.65,-63.57,1).map(r=>r.photo[0]),['a','b']);
  assert.deepEqual(nearPhotos(photos,44.65,-63.57,1,'2001').map(r=>r.photo[0]),['b']);
 });
+
+import {nearbyYears, photoCollection, archiveSource} from '../web/model.mjs';
+import {stories} from '../web/stories.mjs';
+import {readFileSync} from 'node:fs';
+const index = JSON.parse(readFileSync(new URL('../web/data/photos.json', import.meta.url)));
+test('The ferry landing year comparison counts the complete selected radius', () => {
+  const groups = nearbyYears(nearPhotos(index.photos, 44.6497, -63.5714, 1));
+  assert.deepEqual(groups.map(g => [g.year, g.count]), [[1955, 2], [2001, 14]]);
+  assert.ok(groups.every(g => g.closest.distance <= 1 && g.closest.photo[2] === g.year));
+  assert.deepEqual(nearbyYears([]), []);
+});
+test('Notebook locations use GeoJSON longitude order and preserve empty catalogue URLs', () => {
+  const collection = photoCollection([['id', 'ref', 2001, 44.64, -63.57, '']], '2026-11-19');
+  assert.deepEqual(collection.features[0].geometry.coordinates, [-63.57, 44.64]);
+  assert.equal(collection.features[0].properties.catalogue_url, null);
+  assert.equal(collection.source, archiveSource);
+});
+test('Each map guide links two distinct archive references and a view within the mosaic', () => {
+  for (const story of Object.values(stories)) {
+    assert.equal(new Set(story.records.map(record => record.ref)).size, 2);
+    assert.ok(story.records.every(record => record.url.startsWith('https://archives.novascotia.ca/') && record.date));
+    assert.ok(story.center[0] > 44.55 && story.center[0] < 44.73);
+  }
+});
