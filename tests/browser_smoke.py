@@ -33,10 +33,34 @@ def main():
                 if slug=='halifaxtimelens':
                     expect(page.locator('#status')).to_contain_text('Comparison ready')
                     assert {q['time'][0][:4] for q in wms}=={'1947','1977'}
+                    page.goto(base+'#story=cogswell')
+                    expect(page.locator('#place-title')).to_have_text('Cogswell and Scotia Square')
+                    expect(page.locator('#story-records')).to_contain_text('4 June 1961')
+                    expect(page.locator('#story-records a')).to_have_count(2)
+                    page.locator('#story').select_option('narrows')
+                    expect(page.locator('#story-records')).to_contain_text('Africville')
+                    handle = page.locator('#drag-handle').bounding_box()
+                    box = page.locator('#comparison').bounding_box()
+                    page.mouse.move(handle['x']+handle['width']/2,handle['y']+handle['height']/2)
+                    page.mouse.down()
+                    page.mouse.move(box['x']+box['width']*.65,handle['y']+handle['height']/2)
+                    page.mouse.up()
+                    assert 63 <= int(page.locator('#reveal').input_value()) <= 67
                     page.locator('#photo-ferry').click()
                     expect(page.locator('#photo-count')).to_contain_text('16 indexed photographs')
                     page.locator('#photo-year').select_option('1955')
                     expect(page.locator('#photo-list li')).to_have_count(2)
+                    expect(page.locator('#year-evidence')).to_contain_text('1955')
+                    expect(page.locator('#year-evidence')).to_contain_text('2001')
+                    page.locator('#show-points').check()
+                    expect(page.locator('#map .archive-dot')).to_have_count(2)
+                    expect(page.locator('#right-map .archive-dot')).to_have_count(2)
+                    page.locator('#photo-list button').first.click()
+                    expect(page.locator('#saved-count')).to_contain_text('1 saved reference')
+                    with page.expect_download() as info: page.locator('#export-photos').click()
+                    collection = json.loads(Path(info.value.path()).read_text())
+                    assert collection['features'][0]['properties']['year'] == 1955
+                    assert collection['features'][0]['geometry']['coordinates'][0] < 0
                     page.locator('#reveal').fill('70')
                     assert '70%' in page.locator('#right-map').get_attribute('style')
                     page.locator('#right-year').select_option('streets')
@@ -52,6 +76,11 @@ def main():
                     assert 'right=streets' in url and 'split=70' in url
                     page.goto(url); expect(page.locator('#right-year')).to_have_value('streets')
                     expect(page.locator('#reveal')).to_have_value('70')
+                    expect(page.locator('#saved-list li')).to_have_count(1)
+                    expect(page.locator('#photo-year')).to_have_value('1955')
+                    expect(page.locator('#show-points')).to_be_checked()
+                    page.locator('#saved-list').get_by_role('button',name='Remove',exact=True).click()
+                    expect(page.locator('#export-photos')).to_be_disabled()
                     page.locator('#swap').click(); expect(page.locator('#left-year')).to_have_value('streets')
                 elif slug=='hiddenwater':
                     page.locator('.result').first.wait_for()
