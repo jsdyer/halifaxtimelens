@@ -1,7 +1,7 @@
 {
   "id": "halifaxtimelens",
   "title": "Halifax Time Lens",
-  "description": "Compare Halifax in 1947 and 1977, trace four places through archival photographs, and save nearby photo references to a map-ready notebook.",
+  "description": "Compare Halifax aerials from 1947 and 1977 with a 2025 satellite view and find nearby archival photographs.",
   "category": "places",
   "tags": [
     "canada",
@@ -16,7 +16,7 @@
   "access": "browser",
   "data_info": {
     "mode": "mixed",
-    "detail": "NRCan aerial mosaics, digitized Halifax Municipal Archives photographs and a weekly municipal photo index anchor each comparison.",
+    "detail": "NRCan aerial mosaics, a dated Copernicus Sentinel-2C image and Halifax Municipal Archives photographs anchor the comparison.",
     "cadence": "Weekly",
     "probes": [
       {

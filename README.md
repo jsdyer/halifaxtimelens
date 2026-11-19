@@ -3,7 +3,7 @@
 Compare Halifax and Dartmouth aerial photographs from 1947 and 1977, then find nearby photographs from the Halifax Municipal Archives index.
 
 <!-- coolcode:guide -->
-Start with Cogswell and Scotia Square to compare the blocks before clearance with the 1977 mosaic, then open the 1961 photograph and the later demolition view. At the ferry terminal, see the closest 1955 and 2001 archive references within one kilometre, show the indexed points on both maps, and save references to a downloadable GeoJSON notebook.
+Choose the 2025 satellite layer on either side to compare the harbour with an earlier aerial mosaic. Start with Cogswell and Scotia Square to compare the blocks before clearance with the 1977 mosaic, then open the 1961 photograph and the later demolition view. At the ferry terminal, see the closest 1955 and 2001 archive references within one kilometre, show the indexed points on both maps, and save references to a downloadable GeoJSON notebook.
 <!-- /coolcode:guide -->
 
 **[Open the live browser tool](https://coolcode.ca/halifaxtimelens/)** · [CoolCode catalogue](https://coolcode.ca/)
@@ -14,7 +14,7 @@ No installation or account is needed to use the tool. This repository contains i
 
 - Drag the reveal slider, pan and zoom synchronized maps, and swap the two sides.
 - Jump to the waterfront, North End, Dartmouth, Northwest Arm or Bedford Basin.
-- Add a modern **street map** for orientation and share the exact comparison view.
+- Choose the **29 September 2025 satellite image** or a modern **street map** on either side and share the exact comparison view.
 - Open the [Halifax Municipal Archives photo index](https://www.halifax.ca/about-halifax/municipal-archives/exhibits/historical-aerial-photos) at the current map location to explore photographs from 1955–2001. Select a point in the index for archival details, or browse the [Flying to the Past album](https://archives.novascotia.ca/communityalbums/halifaxarchives/).
 
 ## Photographic guides and research notebook
@@ -38,7 +38,7 @@ The year cards summarise the complete municipal index within the chosen radius a
 - Map tiles: `https://datacube.services.geo.ca/ows/aerial`
 - Layer: `halifax`; WMS 1.3.0; time: `1947-07-01T12:00:00Z` or `1977-07-01T12:00:00Z`.
 
-The capabilities URL describes the service; it does not render images. The app uses the advertised GetMap endpoint. Historical images may have alignment differences and seams. A comparison is not a precise boundary or change measurement. Modern OpenStreetMap data is a street map, **not current aerial photography**. If imagery fails, the app displays a notice and links to the official source.
+The capabilities URL describes the service; it does not render images. The app uses the advertised GetMap endpoint. Historical images may have alignment differences and seams. A comparison is not a precise boundary or change measurement. The [Sentinel-2C Level-2A scene](https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2C_20TMQ_20250929_0_L2A) supplies the true-colour satellite layer. Contains modified Copernicus Sentinel data 2025, distributed under the [Copernicus Sentinel data terms](https://dataspace.copernicus.eu/terms-and-conditions). Its observation time was 15:20 UTC on 29 September 2025. The 10 m source visual is clipped to the Halifax region, reprojected to Web Mercator and resampled to approximately 13 m on the ground. The compressed image loads from this site. The modern street map changes independently. If imagery fails, the app displays a notice and links to the official source.
 
 OpenStreetMap contributors supply the street map. Leaflet's licence is included in `web/vendor/LICENSE`.
 

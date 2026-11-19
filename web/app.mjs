@@ -7,9 +7,54 @@ const view=readView(location.hash),box=[[EXTENT[0][1],EXTENT[0][0]],[Math.max(44
 const map=L.map('map',{scrollWheelZoom:false,minZoom:11,maxZoom:18,maxBounds:box,maxBoundsViscosity:.7}).setView([view.lat,view.lng],view.zoom);
 const right=L.map('right-map',{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,minZoom:11,maxZoom:18}).setView(map.getCenter(),map.getZoom());
 L.control.scale({imperial:false}).addTo(map);map.attributionControl.addAttribution('<a href="https://open.canada.ca/data/en/dataset/4e8e3c6a-c961-4def-bdc7-f24823462818">NRCan / NAPL</a>');
-let leftLayer,rightLayer;const loaded=new Set();
-function layerFor(year,side){const l=year==='streets'?L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}):L.tileLayer.wms('https://datacube.services.geo.ca/ows/aerial',wmsOptions(year));l.on('tileerror',()=>{$('map-notice').hidden=false;$('map-notice').textContent='Some imagery could not load. Try another year or open the official NRCan viewer below.';});l.on('load',()=>{loaded.add(side);if(loaded.size===2 && $('left-year').value!==$('right-year').value)$('status').textContent='Comparison ready. Slide, pan or choose a starting place.';});return l;}
-function updateLayers(){loaded.clear();$('status').textContent='Loading the selected layers…';$('map-notice').hidden=true;if(leftLayer)leftLayer.remove();if(rightLayer)rightLayer.remove();leftLayer=layerFor($('left-year').value,'left').addTo(map);rightLayer=layerFor($('right-year').value,'right').addTo(right);for(const [side,id] of [['left','left-year'],['right','right-year']]){$(side+'-label').textContent=label($(id).value);$('image-'+side).textContent=$(id).value==='streets'?'Street map':$(id).value;}if($('left-year').value===$('right-year').value)$('status').textContent='Both sides show the same layer. Choose different years to compare.';}
+let leftLayer, rightLayer;
+const loaded = new Set();
+const failed = new Set();
+let generation = 0;
+function layerFor(key, side, version) {
+  let layer;
+  if (key === 'satellite') {
+    layer = L.imageOverlay('./data/halifax-sentinel-2025.webp', [[44.5100452, -63.8], [44.82, -63.33]], {
+      alt: 'True-colour Copernicus Sentinel-2C image of Halifax, 29 September 2025', pane: 'tilePane'
+    });
+  } else if (key === 'streets') {
+    layer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19,
+      attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'});
+  } else {
+    layer = L.tileLayer.wms('https://datacube.services.geo.ca/ows/aerial', wmsOptions(key));
+  }
+  layer.on('tileerror error', () => {
+    if (version !== generation) return;
+    failed.add(side);
+    $('map-notice').hidden = false;
+    $('imagery-error').textContent = 'Some imagery could not load on the ' + [...failed].join(' and ') + '.';
+    $('status').textContent = 'Some comparison imagery is unavailable.';
+  });
+  layer.on('load', () => {
+    if (version !== generation) return;
+    loaded.add(side);
+    if (!failed.size && loaded.size === 2 && $('left-year').value !== $('right-year').value)
+      $('status').textContent = 'Comparison ready. Slide, pan or choose a starting place.';
+  });
+  return layer;
+}
+function updateLayers() {
+  generation++;
+  loaded.clear();
+  failed.clear();
+  $('status').textContent = 'Loading the selected layers…';
+  $('map-notice').hidden = true;
+  leftLayer?.remove(); rightLayer?.remove();
+  const left = $('left-year').value, rightKey = $('right-year').value;
+  leftLayer = layerFor(left, 'left', generation).addTo(map);
+  rightLayer = layerFor(rightKey, 'right', generation).addTo(right);
+  for (const [side, key] of [['left',left],['right',rightKey]]) {
+    $(side+'-label').textContent = label(key);
+    $('image-'+side).textContent = key === 'streets' ? 'Street map' : key === 'satellite' ? '2025 satellite' : key;
+  }
+  if (left === rightKey) $('status').textContent = 'Both sides show the same layer. Choose different layers to compare.';
+}
+$('retry-imagery').onclick = updateLayers;
 function reveal(){const n=Number($('reveal').value);$('right-map').style.clipPath=`inset(0 0 0 ${n}%)`;$('curtain').style.left=n+'%';$('percentage').value=n+'%';}
 function updateArchiveLink() {
   const {lat, lng} = map.getCenter();
