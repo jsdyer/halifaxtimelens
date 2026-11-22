@@ -2,6 +2,7 @@
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from visual_review import capture_waterfront
 import os, json, re, shutil, tempfile, threading
 from urllib.parse import parse_qs, urlsplit
 from playwright.sync_api import sync_playwright, expect
@@ -127,6 +128,8 @@ def main():
                 if slug!='halifaxtimelens':
                     page.route('**/data/*.json',lambda r:r.fulfill(status=503,body='Unavailable'))
                     page.reload(); expect(page.locator('#status')).to_contain_text('could not load')
+                if slug == 'halifaxtimelens':
+                    capture_waterfront(browser, base, shots / 'percy')
                 assert not errors, errors
                 browser.close()
             print('Browser flows, source links, exports, saved/deep-link state, failure handling and mobile layout passed')
