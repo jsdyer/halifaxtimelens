@@ -85,3 +85,8 @@ Public GitHub repositories can have scheduled workflows disabled after 60 days o
 
 This is an interim mitigation, not a scheduling guarantee: GitHub does not document active-workflow renewal as a permanent exemption, and scheduled runs can be delayed or dropped. A scheduler on our own Linux server is the planned independent trigger. The guard does not collect data, create dummy commits, or change source/check timestamps; successful collection and published data freshness still need monitoring.
 <!-- /schedule-reliability -->
+
+## Ready-to-use searches
+
+- [Cogswell Interchange Before and After in Aerial Photos](https://coolcode.ca/halifaxtimelens/cogswell.html). Look inland from the Halifax waterfront toward Duke Street. Compare the 1947 street grid with the 1977 interchange, then open the guide’s dated photographs to follow the demolition and development around Scotia Square.
+- [Dartmouth Ferry Landing in Historical Aerial Photos](https://coolcode.ca/halifaxtimelens/dartmouth-ferry.html). Follow the Dartmouth ferry landing from the 1947 aerial photograph to the September 2025 satellite image. Drag the divider over the shoreline and open the guide’s archival records for views of the terminal.

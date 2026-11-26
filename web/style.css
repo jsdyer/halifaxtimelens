@@ -17,3 +17,9 @@
 .photos .check{margin-top:1rem}.photos li button,.notebook li button{font-size:.7rem;padding:.3rem .5rem}
 .notebook li{padding:.35rem 0}.notebook .actions{margin-top:.25rem}
 @media(max-width:680px){.evidence-cards{grid-template-columns:1fr}.topbar{flex-wrap:wrap}.topbar nav{flex-wrap:wrap}}
+
+.task-entries { display: flex; flex-wrap: wrap; gap: .55rem 1.1rem; margin: .7rem 0; }
+.task-entries a { color: inherit; text-decoration: underline; text-underline-offset: .16em; }
+.task-entries a:first-child { font-weight: bold; }
+.tool-name { font-size: .95rem; margin: .25rem 0; }
+h1 { overflow-wrap: anywhere; }

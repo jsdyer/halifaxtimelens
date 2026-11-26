@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "cogswell",
+    "title": "Cogswell Interchange Before and After in Aerial Photos",
+    "description": "Look inland from the Halifax waterfront toward Duke Street. Compare the 1947 street grid with the 1977 interchange, then open the guide’s dated photographs to follow the demolition and development around Scotia Square.",
+    "setting": "view",
+    "value": "#story=cogswell&left=1947&right=1977"
+  },
+  {
+    "slug": "dartmouth-ferry",
+    "title": "Dartmouth Ferry Landing in Historical Aerial Photos",
+    "description": "Follow the Dartmouth ferry landing from the 1947 aerial photograph to the September 2025 satellite image. Drag the divider over the shoreline and open the guide’s archival records for views of the terminal.",
+    "setting": "view",
+    "value": "#story=dartmouth&left=1947&right=satellite"
+  }
+]

@@ -8,6 +8,8 @@ import shutil
 import tempfile
 from urllib.parse import urlsplit
 
+from public_pages import publish_pages
+
 ROOT = Path(__file__).resolve().parents[1]
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 
@@ -52,7 +54,7 @@ def build(root=ROOT):
             page = page.replace(placeholder, escape(tool[key], quote=True))
         if re.search(r"\{\{[A-Z_]+\}\}", page):
             raise ValueError("Unresolved template placeholder in web/index.html")
-        index.write_text(page, encoding="utf-8")
+        publish_pages(stage, page, tool)
         (stage / ".nojekyll").touch()
         if output.exists():
             shutil.rmtree(output)

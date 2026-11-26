@@ -131,6 +131,12 @@ def main():
                 if slug == 'halifaxtimelens':
                     capture_waterfront(browser, base, shots / 'percy')
                 assert not errors, errors
+                page.goto(base + 'cogswell.html')
+                page.wait_for_function("document.querySelector('#story').value === 'cogswell' && document.querySelector('#right-year').value === '1977'")
+                assert page.locator('link[rel="canonical"]').get_attribute('href') == 'https://coolcode.ca/halifaxtimelens/cogswell.html'
+                page.goto(base + 'dartmouth-ferry.html')
+                page.wait_for_function("document.querySelector('#story').value === 'dartmouth' && document.querySelector('#right-year').value === 'satellite'")
+                assert page.locator('link[rel="canonical"]').get_attribute('href') == 'https://coolcode.ca/halifaxtimelens/dartmouth-ferry.html'
                 browser.close()
             print('Browser flows, source links, exports, saved/deep-link state, failure handling and mobile layout passed')
         finally:server.shutdown()
