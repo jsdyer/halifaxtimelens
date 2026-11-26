@@ -123,6 +123,10 @@ def main():
                     page.locator('#willoughby').click(); page.locator('.result').first.wait_for()
                 page.screenshot(path=str(shots/'desktop.png'),full_page=True)
                 page.set_viewport_size({'width':390,'height':844})
+                page.goto(base)
+                expect(page.locator('#comparison-location')).to_have_text('Halifax waterfront')
+                assert 0 <= page.locator('#comparison').bounding_box()['y'] < 844
+                assert page.locator('#comparison').bounding_box()['y'] < page.locator('#left-year').bounding_box()['y']
                 assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), 'Mobile page overflows horizontally'
                 page.screenshot(path=str(shots/'mobile.png'),full_page=True)
                 if slug!='halifaxtimelens':
@@ -133,6 +137,7 @@ def main():
                 assert not errors, errors
                 page.goto(base + 'cogswell.html#explore')
                 page.wait_for_function("document.querySelector('#story').value === 'cogswell' && document.querySelector('#right-year').value === '1977'")
+                expect(page.locator('#comparison-location')).to_have_text('Cogswell and Scotia Square')
                 assert page.locator('link[rel="canonical"]').get_attribute('href') == 'https://coolcode.ca/halifaxtimelens/cogswell.html'
                 page.goto(base + 'dartmouth-ferry.html')
                 page.wait_for_function("document.querySelector('#story').value === 'dartmouth' && document.querySelector('#right-year').value === 'satellite'")

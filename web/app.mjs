@@ -69,6 +69,21 @@ map.on('moveend zoomend', updateArchiveLink);
 updateArchiveLink();
 map.on('move zoom resize',()=>right.setView(map.getCenter(),map.getZoom(),{animate:false}));new ResizeObserver(()=>{map.invalidateSize();right.invalidateSize();}).observe($('comparison'));
 $('left-year').value=view.left;$('right-year').value=view.right;$('reveal').value=view.split;for(const id of ['left-year','right-year'])$(id).onchange=updateLayers;$('reveal').oninput=reveal;$('swap').onclick=()=>{const a=$('left-year').value;$('left-year').value=$('right-year').value;$('right-year').value=a;updateLayers();};
+function updateComparisonLocation() {
+  const center = map.getCenter();
+  const story = stories[$('story').value];
+  const place = Object.values(PLACES).find(item => center.distanceTo(item.center) < 150);
+  const atStory = story && center.distanceTo(story.center) < 150;
+  $('comparison-location').textContent = atStory ? story.title : place ? place.name : 'Map centre · ' + center.lat.toFixed(3) + '°, ' + center.lng.toFixed(3) + '°';
+  if (!story) {
+    $('place-title').textContent = place ? place.name : 'This map location';
+    $('place-note').textContent = place ? place.note : 'Browse the archive photographs indexed near the centre of this view.';
+    for (const button of document.querySelectorAll('[data-place]')) {
+      button.setAttribute('aria-pressed', String(PLACES[button.dataset.place] === place));
+    }
+  }
+}
+map.on('moveend', updateComparisonLocation);
 function place(key){showStory('',false);const p=PLACES[key];map.setView(p.center,p.zoom);$('place-title').textContent=p.name;$('place-note').textContent=p.note;for(const b of document.querySelectorAll('[data-place]'))b.setAttribute('aria-pressed',String(b.dataset.place===key));}
 function showStory(key, moveMap) {
   const story = Object.hasOwn(stories, key) ? stories[key] : null;
@@ -76,6 +91,7 @@ function showStory(key, moveMap) {
   $('story-records').replaceChildren();
   $('open-story').hidden = !story;
   for (const button of $('guide-choices').children) button.setAttribute('aria-pressed', String(button.dataset.story === key));
+  updateComparisonLocation();
   if (!story) return;
   if (moveMap) map.setView(story.center, story.zoom, {animate: false});
   $('place-title').textContent = story.title;
@@ -123,6 +139,7 @@ handle.onpointermove = event => { if (handle.hasPointerCapture(event.pointerId))
 handle.onpointerup = event => { if (handle.hasPointerCapture(event.pointerId)) handle.releasePointerCapture(event.pointerId); };
 map.on('click', event => map.panTo(event.latlng));
 if (Object.hasOwn(stories, params.get('story'))) showStory(params.get('story'), !params.has('lat') || !params.has('lng'));
+updateComparisonLocation();
 await setupPhotos(map, right, params);
 
 window.addEventListener('hashchange', () => {
