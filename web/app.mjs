@@ -2,7 +2,7 @@ import {$,el,share,link} from './common.mjs';
 import {PLACES,EXTENT,readView,label,wmsOptions} from './model.mjs';
 import {stories} from './stories.mjs';
 import {setupPhotos, photoSettings} from './photo-research.mjs';
-const startingHash = location.hash || document.body.dataset.view || "";
+const startingHash = location.hash.includes("=") ? location.hash : document.body.dataset.view || "";
 const params = new URLSearchParams(startingHash.slice(1));
 const view=readView(startingHash),box=[[EXTENT[0][1],EXTENT[0][0]],[Math.max(44.78, EXTENT[1][1]),EXTENT[1][0]]];
 const map=L.map('map',{scrollWheelZoom:false,minZoom:11,maxZoom:18,maxBounds:box,maxBoundsViscosity:.7}).setView([view.lat,view.lng],view.zoom);

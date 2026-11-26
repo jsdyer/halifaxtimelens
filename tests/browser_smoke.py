@@ -131,7 +131,7 @@ def main():
                 if slug == 'halifaxtimelens':
                     capture_waterfront(browser, base, shots / 'percy')
                 assert not errors, errors
-                page.goto(base + 'cogswell.html')
+                page.goto(base + 'cogswell.html#explore')
                 page.wait_for_function("document.querySelector('#story').value === 'cogswell' && document.querySelector('#right-year').value === '1977'")
                 assert page.locator('link[rel="canonical"]').get_attribute('href') == 'https://coolcode.ca/halifaxtimelens/cogswell.html'
                 page.goto(base + 'dartmouth-ferry.html')
