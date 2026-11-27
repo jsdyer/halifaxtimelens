@@ -35,3 +35,15 @@ h1 { overflow-wrap: anywhere; }
 .comparison-heading { display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: baseline; justify-content: space-between; padding: 12px 18px 0; }
 .comparison-heading h2 { font: 600 1.15rem/1.3 Georgia, serif; margin: 0; }
 .comparison-heading a { font-size: .82rem; }
+.view-page main,.view-page .topbar,.view-page footer{max-width:1160px;margin-inline:auto}
+.view-page main{padding-block:clamp(1.25rem,4vw,3rem);line-height:1.5}.view-page main>p{max-width:78ch}
+.view-page h1{max-width:24ch}.view-page h2{font:500 clamp(1.45rem,3vw,2.15rem)/1.18 Georgia,serif;margin:1.6rem 0 .5rem}
+.view-page h3{font-size:1.05rem;margin:.35rem 0}.view-page li{margin:.35rem 0}.view-intro{font-size:clamp(1.07rem,2vw,1.28rem)}
+.view-page .compare-links{font-weight:650}.view-note,.view-page small{color:#625e55;font-size:.9rem}.view-page .topbar nav{justify-content:space-between;width:100%}
+.time-strip,.archive-pair,.view-directory{display:grid;gap:1rem}.time-strip{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:1rem}
+.time-strip figure{margin:0}.time-strip img,.view-directory img{display:block;width:100%;height:auto;background:#e5e0d4}.time-strip figcaption{font-weight:650;font-size:.92rem;margin-top:.3rem}
+.archive-pair,.view-directory{padding:0;list-style:none}.archive-pair{grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr))}.archive-pair li{border-top:2px solid var(--line);padding:.65rem 0}.archive-pair p{margin:.4rem 0}
+.view-directory{grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr))}.view-directory img{margin-bottom:.45rem}.view-directory p{margin:.3rem 0 .9rem}.view-page footer{display:block;line-height:1.6;font-size:.88rem}
+@media(max-width:650px){.view-page main,.view-page footer,.view-page .topbar{padding-inline:1rem}.time-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}.view-page main{overflow-wrap:anywhere}.view-directory{grid-template-columns:1fr 1fr;gap:.7rem}.view-directory p{font-size:.88rem}}
+
+.time-strip figcaption span{display:block;font-weight:400;font-size:.88rem;line-height:1.4;margin-top:.25rem}

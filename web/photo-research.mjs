@@ -8,7 +8,7 @@ export function photoSettings() {
   return {radius: $('photo-radius').value, year: $('photo-year').value, points: $('show-points').checked ? '1' : '0'};
 }
 
-export async function setupPhotos(map, right, params) {
+export async function setupPhotos(map, right, params, focusFerry) {
   let data;
   try {
     const response = await fetch('./data/photos.json');
@@ -114,7 +114,7 @@ export async function setupPhotos(map, right, params) {
   }
   function reset() { limit = 8; render(); }
   map.on('moveend', reset);
-  $('photo-ferry').onclick = () => map.setView([44.6497, -63.5714], 16);
+  $('photo-ferry').onclick = focusFerry;
   $('photo-more').onclick = () => { limit += 20; render(); };
   $('photo-radius').onchange = reset;
   $('photo-year').onchange = reset;

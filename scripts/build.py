@@ -9,6 +9,7 @@ import tempfile
 from urllib.parse import urlsplit
 
 from public_pages import publish_pages
+from viewpoints import publish_viewpoints
 
 ROOT = Path(__file__).resolve().parents[1]
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
@@ -16,10 +17,10 @@ SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 
 def metadata(root=ROOT):
     tool = json.loads((root / "tool.json").read_text(encoding="utf-8"))
-    required = {"id", "title", "description", "category", "tags", "icon", "url", "source", "hosting", "access", "data_info"}
+    required = {"id", "title", "description", "category", "tags", "icon", "url", "source", "hosting", "access", "data_info", "result_directory"}
     if not isinstance(tool, dict) or set(tool) != required:
         raise ValueError("tool.json has missing or unknown fields")
-    for key in required - {"tags", "data_info"}:
+    for key in required - {"tags", "data_info", "result_directory"}:
         if not isinstance(tool[key], str) or not tool[key].strip():
             raise ValueError(f"tool.json: {key} must be a nonempty string")
     if not SLUG.fullmatch(tool["id"]) or tool["url"] != f'/{tool["id"]}/' or tool["hosting"] != "project":
@@ -28,6 +29,9 @@ def metadata(root=ROOT):
         raise ValueError("tags must be an array of nonempty strings")
     if tool["access"] != "browser":
         raise ValueError("This starter produces an immediately usable browser tool; use access: browser")
+    directory = tool["result_directory"]
+    if not isinstance(directory, dict) or directory.get("path") != "records/" or not directory.get("title"):
+        raise ValueError("Halifax viewpoint profiles must use records/")
     source = urlsplit(tool["source"])
     if source.scheme != "https" or not source.hostname or source.username is not None or any(c.isspace() for c in tool["source"]) or "\\" in tool["source"]:
         raise ValueError("source must be an HTTPS URL without credentials or whitespace")
@@ -54,7 +58,8 @@ def build(root=ROOT):
             page = page.replace(placeholder, escape(tool[key], quote=True))
         if re.search(r"\{\{[A-Z_]+\}\}", page):
             raise ValueError("Unresolved template placeholder in web/index.html")
-        publish_pages(stage, page, tool)
+        retrieved = publish_viewpoints(stage, tool)
+        publish_pages(stage, page.replace("<!-- photo-edition -->", escape(retrieved)), tool)
         (stage / ".nojekyll").touch()
         if output.exists():
             shutil.rmtree(output)

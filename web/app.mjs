@@ -1,6 +1,6 @@
 import {$,el,share,link} from './common.mjs';
 import {PLACES,EXTENT,readView,label,wmsOptions} from './model.mjs';
-import {stories} from './stories.mjs';
+import {stories,viewpoints} from './stories.mjs';
 import {setupPhotos, photoSettings} from './photo-research.mjs';
 const startingHash = location.hash.includes("=") ? location.hash : document.body.dataset.view || "";
 const params = new URLSearchParams(startingHash.slice(1));
@@ -72,8 +72,17 @@ $('left-year').value=view.left;$('right-year').value=view.right;$('reveal').valu
 function updateComparisonLocation() {
   const center = map.getCenter();
   const story = stories[$('story').value];
-  const place = Object.values(PLACES).find(item => center.distanceTo(item.center) < 150);
+  const nearest = Object.values(PLACES).reduce((best, item) =>
+    center.distanceTo(item.center) < center.distanceTo(best.center) ? item : best);
+  const place = center.distanceTo(nearest.center) < 150 ? nearest : null;
   const atStory = story && center.distanceTo(story.center) < 150;
+  const stop = atStory ? story : place === PLACES.ferry ? viewpoints.ferry : null;
+  const profile = $('viewpoint-record');
+  profile.hidden = !stop;
+  if (stop) {
+    profile.href = './records/' + stop.slug + '/';
+    profile.textContent = 'Open the ' + stop.title + ' viewpoint and its source images';
+  }
   $('comparison-location').textContent = atStory ? story.title : place ? place.name : 'Map centre · ' + center.lat.toFixed(3) + '°, ' + center.lng.toFixed(3) + '°';
   if (!story) {
     $('place-title').textContent = place ? place.name : 'This map location';
@@ -140,7 +149,8 @@ handle.onpointerup = event => { if (handle.hasPointerCapture(event.pointerId)) h
 map.on('click', event => map.panTo(event.latlng));
 if (Object.hasOwn(stories, params.get('story'))) showStory(params.get('story'), !params.has('lat') || !params.has('lng'));
 updateComparisonLocation();
-await setupPhotos(map, right, params);
+await setupPhotos(map, right, params, () => place("ferry"));
+if (params.get("view") === "compare") $("comparison-location").scrollIntoView();
 
 window.addEventListener('hashchange', () => {
   const next = new URLSearchParams(location.hash.slice(1));
@@ -160,4 +170,5 @@ window.addEventListener('hashchange', () => {
     $('photo-year').dispatchEvent(new Event('change'));
   }
   showStory(next.get('story'), !next.has('lat') || !next.has('lng'));
+  if (next.get('view') === 'compare') $('comparison-location').scrollIntoView();
 });

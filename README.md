@@ -3,7 +3,7 @@
 Compare Halifax and Dartmouth aerial photographs from 1947 and 1977, then find nearby photographs from the Halifax Municipal Archives index.
 
 <!-- coolcode:guide -->
-Choose the 2025 satellite layer on either side to compare the harbour with an earlier aerial mosaic. Start with Cogswell and Scotia Square to compare the blocks before clearance with the 1977 mosaic, then open the 1961 photograph and the later demolition view. At the ferry terminal, see the closest 1955 and 2001 archive references within one kilometre, show the indexed points on both maps, and save references to a downloadable GeoJSON notebook.
+Open a named harbour viewpoint to compare three matched image extracts, browse dated archive photographs and return to the same place in the map. Start with Cogswell and Scotia Square to compare the blocks before clearance with the 1977 mosaic, then open the 1961 photograph and the later demolition view. At the ferry terminal, see the closest 1955 and 2001 archive references within one kilometre, show the indexed points on both maps, and save references to a downloadable GeoJSON notebook.
 <!-- /coolcode:guide -->
 
 **[Open the live browser tool](https://coolcode.ca/halifaxtimelens/)** · [CoolCode catalogue](https://coolcode.ca/)
@@ -29,6 +29,14 @@ Four guides centre the mosaics on the subject of a pair of historical photograph
 | [Shannon Park and the MacKay Bridge](https://coolcode.ca/halifaxtimelens/#story=narrows) | [Bedford Institute, 9 September 1965](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=441) | [Shannon Park and bridge, 1970s](https://archives.novascotia.ca/communityalbums/halifaxarchives/archives/?ID=475) |
 
 The year cards summarise the complete municipal index within the chosen radius and identify the closest record in each year. The year selector filters the list and optional map dots. Proximity measures the distance between indexed locations and the map centre. The photo may face a different direction or cover different ground. Each saved location exports with its municipal ID, archival reference, year, coordinates and catalogue URL when supplied. The GeoJSON also records the index source and retrieval date.
+
+## Named viewpoints
+
+The [viewpoint directory](https://coolcode.ca/halifaxtimelens/records/) follows the two ferry landings, Cogswell and Scotia Square, Point Pleasant and the container terminal, and Shannon Park and the MacKay Bridge. Each place has a permanent page with three matched north-up images, an exact map link for each pair of layers, and a connection to another stop. The [Dartmouth ferry landing](https://coolcode.ca/halifaxtimelens/records/dartmouth-ferry-landing/) connects the archive’s 1950s Portland Street and 1960s Queen Street photographs with a separately sourced postal history.
+
+The offline build regenerates the nearby archive counts and closest dated records from the same published photo index used by the map. It also rebuilds the native sitemap. The municipal refresh is scheduled for Wednesdays at 09:38 UTC. Only the municipal index retrieval date changes at these checks. The survey imagery remains tied to its original source dates.
+
+To add a sourced viewpoint, update `web/viewpoints.json` with its stable slug, centre, source citations, map width in projected EPSG:3857 metres, and next stop. Run `python3 scripts/capture_viewpoints.py` with Pillow installed to prepare the fixed 540 × 360 extracts. This requests both historical mosaics at identical bounds and crops the bundled georeferenced Sentinel image to match. The capture validates all returned images before replacing the saved files. Commit these small WebP previews under `web/data/viewpoints/`, then run the normal offline build.
 
 ## Imagery and coverage
 

@@ -4,6 +4,7 @@ import shutil
 import sys
 import tempfile
 import unittest
+from xml.etree import ElementTree as ET
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from build import ROOT, build, metadata
 
@@ -32,6 +33,28 @@ class BuildTests(unittest.TestCase):
         self.assertIn('href="./style.css"', page)
         self.assertFalse((self.root / "dist/private.txt").exists())
         self.assertTrue((self.root / "dist/.nojekyll").exists())
+
+    def test_new_index_record_changes_viewpoint_report_and_sitemap_matches_files(self):
+        snapshot = self.root / "web/data/photos.json"
+        data = json.loads(snapshot.read_text())
+        data["photos"].append(["NEW", "Local test reference", 1999, 44.6642, -63.5694, ""])
+        data["count"] += 1
+        snapshot.write_text(json.dumps(data))
+        build(self.root)
+        out = self.root / "dist"
+        profile = (out / "records/dartmouth-ferry-landing/index.html").read_text()
+        self.assertIn("Local test reference",profile)
+        self.assertIn("no catalogue URL supplied",profile)
+        self.assertIn("101-80C-1-1.1",profile)
+        self.assertIn("101-80C-1-1.2",profile)
+        self.assertIn("right=satellite",profile)
+        self.assertIn("https://coolcode.ca/postmarkplaces/records/offices/dartmouth/",profile)
+        base = "https://coolcode.ca/halifaxtimelens/"
+        urls = [el.text for el in ET.parse(out/"sitemap.xml").findall(".//{*}loc")]
+        routes = {p.parent.relative_to(out).as_posix()+"/" for p in (out/"records").rglob("index.html")}
+        self.assertEqual(set(urls),{base+route for route in routes})
+        for route in routes:
+            self.assertIn(f'<link rel="canonical" href="{base}{route}">', (out/route/"index.html").read_text())
 
     def test_url_matches_tool_id(self):
         self.edit(url="/different/")
